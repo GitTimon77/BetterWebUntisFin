@@ -19,7 +19,7 @@ import {
 //import DropdownMenuEarly from './DropdownMenuEarly';
 
 type RootTabParamList = {
-  (tabs): {};
+  '(tabs)': {};
   stundenplan: {};
   impressum: {};
   login: {};
