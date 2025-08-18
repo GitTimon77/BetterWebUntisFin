@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 type RootTabParamList = {
   stundenplan: {};
@@ -20,16 +20,6 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [schools, setSchools] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
-    const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
 
   useEffect(() => {
     if (searchTerm.length >= 3) {
@@ -67,8 +57,8 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
     }
   };
 
-  // Entscheide, ob mittig oder oben
-  const isCentered = !keyboardVisible && searchTerm.length === 0;
+  // Entscheide, ob mittig oder oben NUR anhand der Query
+  const isCentered = searchTerm.length === 0;
 
   return (
     <SafeAreaView style={styles.container}>

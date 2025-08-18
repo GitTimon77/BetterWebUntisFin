@@ -19,6 +19,7 @@ import {
 //import DropdownMenuEarly from './DropdownMenuEarly';
 
 type RootTabParamList = {
+  (tabs): {};
   stundenplan: {};
   impressum: {};
   login: {};
@@ -107,7 +108,7 @@ const LoginScreen: React.FC = () => {
         // Navigation zur Tabelle
         saveData("username", username);
         saveData("password", password);
-        navigation.navigate('stundenplan', {});
+        navigation.navigate('(tabs)', {});
       } else {
         Alert.alert('Fehler', 'Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.');
       }
@@ -212,7 +213,7 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
   keyboardAvoidingView: {
     flex: 1,
