@@ -58,7 +58,7 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
   };
 
   // Entscheide, ob mittig oder oben NUR anhand der Query
-  const isCentered = searchTerm.length === 0;
+  const isCentered = searchTerm.length <= 2;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -81,7 +81,7 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
                 placeholder="Schule suchen..."
               />
             </View>
-            {error && <Text style={styles.errorText}>{error}</Text>}
+            {error && !isCentered &&<Text style={styles.errorText}>{error}</Text>}
             <FlatList
               data={schools}
               keyExtractor={(item) => item.loginName.toString()}
@@ -111,7 +111,6 @@ const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   header: {
-    marginBottom: 20,
     width: '100%',
   },
   container: {

@@ -108,7 +108,7 @@ const LoginScreen: React.FC = () => {
         // Navigation zur Tabelle
         saveData("username", username);
         saveData("password", password);
-        navigation.navigate('(tabs)', {});
+        navigation.navigate("(tabs)", {});
       } else {
         Alert.alert('Fehler', 'Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.');
       }
