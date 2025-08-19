@@ -105,6 +105,7 @@ const Stundenplan: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentWeekStart, setCurrentWeekStart] = useState<number>(getCurrentMonday());
   const [markedCourses, setMarkedCourses] = useState<string[]>([]);
+  const [schoolYear, setSchoolYear] = useState<string | null>(null);
 
   useEffect(() => {
   const unsubscribe = navigation.addListener('tabPress', (e) => {
@@ -243,6 +244,15 @@ const Stundenplan: React.FC = () => {
     }
   }
 
+  async function saveData(key: string, value: string) {
+      try {
+        await SecureStore.setItemAsync(key, value);
+        console.log('Daten erfolgreich gespeichert');
+      } catch (error) {
+        console.error('Fehler beim Speichern der Daten', error);
+      }
+    }
+
   function getCurrentMonday() {
     const today = new Date();
     const day = today.getDay();
@@ -360,12 +370,27 @@ const Stundenplan: React.FC = () => {
         const holidayData = holidayresponse.data;
         setHolidays(holidayData.result);
 
-        await axiosInstance({
+        const currentSchoolYear = await axiosInstance({
           method: "POST",
           url: `/WebUntis/jsonrpc.do`,
           params: { school },
           data: {
             id: "4",
+            method: "getCurrentSchoolyear",
+            params: {},
+            jsonrpc: "2.0"
+          }
+        });
+
+        saveData('schoolYear', currentSchoolYear.data.result.name.toString());
+        setSchoolYear(currentSchoolYear.data.result.name.toString());
+
+        await axiosInstance({
+          method: "POST",
+          url: `/WebUntis/jsonrpc.do`,
+          params: { school },
+          data: {
+            id: "5",
             method: "logout",
             params: {},
             jsonrpc: "2.0"
