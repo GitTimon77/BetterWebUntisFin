@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 //import DropdownMenu from './DropdownMenu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 
 type RootTabParamList = {
@@ -92,6 +93,8 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 };
 
 const Stundenplan: React.FC = () => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const route = useRoute<TableScreenRouteProp>();
@@ -102,6 +105,17 @@ const Stundenplan: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentWeekStart, setCurrentWeekStart] = useState<number>(getCurrentMonday());
   const [markedCourses, setMarkedCourses] = useState<string[]>([]);
+
+  useEffect(() => {
+  const unsubscribe = navigation.addListener('tabPress', (e) => {
+    if (!isFocused) {
+      return;
+    }
+    setCurrentWeekStart(getCurrentMonday());
+  });
+
+  return unsubscribe;
+}, [navigation, isFocused]);
 
   useEffect(() => {
       setTimeGrid([{
