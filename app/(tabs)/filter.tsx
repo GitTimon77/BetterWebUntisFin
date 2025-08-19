@@ -108,7 +108,7 @@ const Filter: React.FC = () => {
         substText: 'Ich bin eine Substitution',
         lstext: 'Ich bin ein Lesson Text',
         lsnumber: 0,
-        startflags: 'Ich bin ein Startflag',
+        statflags: 'Ich bin ein Startflag',
         activityType: 'Ich bin ein Activity Type',
         sg: 'Ich bin eine Studentengruppe',
       },
@@ -124,7 +124,7 @@ const Filter: React.FC = () => {
         substText: '',
         lstext: '',
         lsnumber: 0,
-        startflags: '',
+        statflags: '',
         activityType: '',
         sg: ''
       }]);
