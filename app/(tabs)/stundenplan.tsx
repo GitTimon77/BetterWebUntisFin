@@ -228,7 +228,6 @@ const Stundenplan: React.FC = () => {
     try {
       const result = await SecureStore.getItemAsync(key);
       if (result) {
-        console.log('Gespeicherter Wert:', result);
         return result;
       } else {
         console.log('Kein Wert für diesen Schlüssel gefunden');
@@ -396,8 +395,6 @@ const Stundenplan: React.FC = () => {
       return { groupedTimetable: {}};
     }
 
-    console.log('Stundenplan-Daten:', timetable);
-
     let filtered = timetable;
     if (markedCourses.length > 0) {
       filtered = timetable.filter(lesson => {
@@ -417,14 +414,7 @@ const Stundenplan: React.FC = () => {
       return acc;
     }, {} as Record<number, Lesson[]>);
 
-    console.log('Gruppierte Lektionen:', grouped);
-
     Object.values(grouped).forEach(lessons => lessons.sort((a, b) => a.startTime - b.startTime));
-
-    // const sorted = Object.keys(grouped)
-    //   .map(Number)
-    //   .filter(date => date > 0)
-    //   .sort((a, b) => a - b);
 
     return { groupedTimetable: grouped};
   }, [timetable, markedCourses]);
@@ -494,8 +484,6 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
     date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
   );
 }
-
-console.log('Guppierte Lektionen:', groupedTimetable);
 
   return (
     <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
