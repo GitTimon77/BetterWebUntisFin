@@ -108,6 +108,7 @@ const Stundenplan: React.FC = () => {
 
   useEffect(() => {
   const unsubscribe = navigation.addListener('tabPress', (e) => {
+    fetchDataBeforeTimetable();
     if (!isFocused) {
       return;
     }
@@ -191,7 +192,9 @@ const Stundenplan: React.FC = () => {
       longName: 'Lange Herbstferien'
     }]);
 
-    const fetchDataBeforeTimetable = async () => {
+  }, [currentWeekStart]);
+
+  const fetchDataBeforeTimetable = async () => {
       try {
         setLoading(true);
         const [loginserver, school, username, password] = await Promise.all([
@@ -207,7 +210,7 @@ const Stundenplan: React.FC = () => {
         }
 
         const axiosInstance = createAxiosInstance(`https://${loginserver}`);
-        await fetchTimetable({ school, username, password, axiosInstance });
+        //await fetchTimetable({ school, username, password, axiosInstance });
 
         const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username}`);
         if (savedMarkedCourses) {
@@ -221,8 +224,11 @@ const Stundenplan: React.FC = () => {
       }
     };
 
-    //fetchDataBeforeTimetable();
-  }, [currentWeekStart]);
+  useEffect(() => {
+    
+    fetchDataBeforeTimetable();
+    
+  }, []);
 
   async function getData(key: string) {
     try {

@@ -1,11 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import axios, { AxiosInstance } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 
 type RootTabParamList = {
@@ -88,13 +87,49 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
 const Filter: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
   const [timetable, setTimetable] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [markedCourses, setMarkedCourses] = useState<string[]>([]);
   const [currentWeekStart, setCurrentWeekStart] = useState<number>(getPreviousMonday());
 
   useEffect(() => {
+    setTimetable([{
+        id: 1,
+        date: 20250818,
+        startTime: 1200,
+        endTime: 1350,
+        kl: [{ id: 1, name: 'Klasse 1', longname: 'Klasse 1 Lang' }],
+        te: [{ id: 1, name: 'Lehrer 1', longname: 'Lehrer 1 Lang' }],
+        su: [{ id: 1, name: 'Mathematik', longname: 'Mathematik Lang' }],
+        ro: [{ id: 1, name: 'Raum 101', longname: 'Raum 101 Lang' }],
+        substText: 'Ich bin eine Substitution',
+        lstext: 'Ich bin ein Lesson Text',
+        lsnumber: 0,
+        startflags: 'Ich bin ein Startflag',
+        activityType: 'Ich bin ein Activity Type',
+        sg: 'Ich bin eine Studentengruppe',
+      },
+      {
+        id: 2,
+        date: 20250818,
+        startTime: 1230,
+        endTime: 1240,
+        kl: [{ id: 2, name: 'Klasse 2', longname: 'Klasse 2 Lang' }],
+        te: [{ id: 2, name: 'Lehrer 2', longname: 'Lehrer 2 Lang' }],
+        su: [{ id: 2, name: 'Englisch', longname: 'Englisch Lang' }],
+        ro: [{ id: 2, name: 'Raum 102', longname: 'Raum 102 Lang' }],
+        substText: '',
+        lstext: '',
+        lsnumber: 0,
+        startflags: '',
+        activityType: '',
+        sg: ''
+      }]);
+
+
     const fetchDataBeforeTimetable = async () => {
       try {
         setLoading(true);
@@ -112,7 +147,7 @@ const Filter: React.FC = () => {
         globalUsername = username;
 
         const axiosInstance = createAxiosInstance(`https://${loginserver}`);
-        await fetchTimetable({ school, username, password, axiosInstance });
+        //await fetchTimetable({ school, username, password, axiosInstance });
         
         // Laden der markierten Kurse
         const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username}`);
@@ -271,9 +306,6 @@ const Filter: React.FC = () => {
     });
   };
 
-  function BackToTimetable() {
-    navigation.navigate('Stundenplan', {});
-  }
 
   if (loading) return (
     <View style={{
@@ -287,19 +319,10 @@ const Filter: React.FC = () => {
   if (error) return <Text style={styles.errorText}>{error}</Text>;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.arrowContainer}>
-          <TouchableOpacity onPress={BackToTimetable} style={styles.arrowButton}>
-            <Ionicons name="chevron-back" size={24} color="black" />
-            <Text style={styles.backText}>Zurück</Text>
-          </TouchableOpacity>
-        </View>
+    <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Filter</Text>
         </View>
-        <View style={styles.placeholderContainer} />
-      </View>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.lessonsContainer}>
           {uniqueCourses.map((course, index) => (
@@ -320,6 +343,12 @@ const Filter: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    darkBackground: {
+    backgroundColor: '#121212'
+  },
+  lightBackground: {
+    backgroundColor: '#ffffff'
+  },
   container: {
     flex: 1,
     padding: 10,
@@ -331,8 +360,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   titleContainer: {
-    flex: 2,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
   },
   placeholderContainer: {
     flex: 1,
@@ -357,10 +388,11 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   lessonsContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   lessonRow: {
     flexDirection: 'row',
@@ -369,12 +401,6 @@ const styles = StyleSheet.create({
   },
   lessonText: {
     fontSize: 15
-  },
-  substitutedText: {
-    color: '#cc0000',
-    fontWeight: 'bold',
-    fontSize: 10,
-    marginTop: 2
   },
   errorText: {
     color: 'red',
