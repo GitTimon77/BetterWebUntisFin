@@ -27,22 +27,21 @@ interface Lesson {
   date: number;
   startTime: number;
   endTime: number;
-  kl: Array<{ id: number; name: string; longname: string }>;
-  te: Array<{ id: number; name: string; longname: string; orgid?: number; orgname?: string }>;
-  su: Array<{ id: number; name: string; longname: string }>;
-  ro: Array<{ id: number; name: string; longname?: string }>;
-  code?: string;
   lstype?: string;
+  code?: string;
   info?: string;
   substText: string;
   lstext?: string;
   lsnumber: number;
-  startflags: string;
+  statflags: string;
   activityType: string;
   sg: string;
   bkRemark?: string;
   bkText?: string;
-  type?: any;
+  kl: Array<{ id: number; name: string; longname: string }>;
+  te: Array<{ id: number; name: string; longname: string; orgid?: number; orgname?: string }>;
+  su: Array<{ id: number; name: string; longname: string }>;
+  ro: Array<{ id: number; name: string; longname?: string; orgid?: number; orgname?: string  }>;
 }
 
 interface TimeGrid {
@@ -94,6 +93,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
 const Stundenplan: React.FC = () => {
   const navigation = useNavigation();
+  const [userId, setUserId] = useState<number>();
   const isFocused = useIsFocused();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -106,6 +106,15 @@ const Stundenplan: React.FC = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState<number>(getCurrentMonday());
   const [markedCourses, setMarkedCourses] = useState<string[]>([]);
   const [schoolYear, setSchoolYear] = useState<string | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+
+  const onLessonPress = (lesson: Lesson) => {
+    if (selectedLesson?.id === lesson.id) {
+      setSelectedLesson(null); // Deselect, schließt Detailanzeige
+    } else {
+      setSelectedLesson(lesson);
+    }
+  };
 
   useEffect(() => {
   const unsubscribe = navigation.addListener('tabPress', (e) => {
@@ -148,15 +157,16 @@ const Stundenplan: React.FC = () => {
         startTime: 1200,
         endTime: 1350,
         kl: [{ id: 1, name: 'Klasse 1', longname: 'Klasse 1 Lang' }],
-        te: [{ id: 1, name: 'Lehrer 1', longname: 'Lehrer 1 Lang' }],
+        te: [{ id: 1, name: 'Lehrer 1', longname: 'Lehrer 1 Lang'}],
         su: [{ id: 1, name: 'Mathematik', longname: 'Mathematik Lang' }],
-        ro: [{ id: 1, name: 'Raum 101', longname: 'Raum 101 Lang' }],
-        substText: 'Ich bin eine Substitution',
+        ro: [{ id: 1, name: 'Raum 101', longname: 'Raum 101 Lang', orgid: 1, orgname: 'Raum 101 Org' }],
+        substText: 'Ich bin eine Substitution, das wird jetzt ein realer Text, bisschen komisch so viel zu schreiben',
         lstext: 'Ich bin ein Lesson Text',
         lsnumber: 0,
-        startflags: 'Ich bin ein Startflag',
+        statflags: 'Ich bin ein Startflag',
         activityType: 'Ich bin ein Activity Type',
         sg: 'Ich bin eine Studentengruppe',
+        code: 'irregular',
       },
       {
         id: 2,
@@ -170,9 +180,10 @@ const Stundenplan: React.FC = () => {
         substText: '',
         //lstext: '',
         lsnumber: 0,
-        startflags: '',
+        statflags: 'Startflag 2',
         activityType: '',
-        sg: ''
+        sg: '',
+        code: 'cancelled',
       }
     ]
   );
@@ -309,6 +320,7 @@ const Stundenplan: React.FC = () => {
 
       if (loginData.result && loginData.result.sessionId) {
         const UserInfos = loginData.result;
+        setUserId(UserInfos.personId);
 
         const timeGridResponse = await axiosInstance({
           method: "POST",
@@ -465,41 +477,51 @@ const Stundenplan: React.FC = () => {
   }, [timetable, markedCourses]);
 
   const LessonCell: React.FC<{ lesson: Lesson }> = React.memo(({ lesson }) => {
-    const isSubstitution = lesson.te[0]?.orgid != null;
+    const isSubstitution = lesson.te[0]?.orgid != null || lesson.ro[0]?.orgid != null || !lesson.kl?.some(item => item.id === userId);
     const isCancelled = lesson.code === 'cancelled';
-    const isNormal = !isCancelled && !isSubstitution;
+    const isIrregular = lesson.code === 'irregular';
+    const isNormal = !isCancelled && !isSubstitution && !isIrregular;
+    const hasAdditionalInfo = lesson.info || lesson.substText;
 
     return (
-      <View style={[
-        styles.lesson,
-        isSubstitution && styles.substitutedLesson,
-        isCancelled && styles.cancelledLesson,
-        isNormal && (isDarkMode ? styles.normalLessonDark : styles.normalLessonLight)
-      ]}>
+      <TouchableOpacity
+        onPress={() => onLessonPress(lesson)}
+        style={[
+          styles.lesson,
+          isCancelled
+            ? styles.cancelledLesson
+            : isSubstitution
+            ? styles.substitutedLesson
+            : isNormal
+            ? isDarkMode
+              ? styles.normalLessonDark
+              : styles.normalLessonLight
+            : {},
+        ]}
+      >
         <Text style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
           {lesson.su[0]?.name || <Text>Veranstaltung</Text>}
         </Text>
         <Text style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
-          {lesson.ro[0]?.name || lesson.kl[0]?.name}
+          {lesson.ro[0].orgid ? lesson.ro.map(t => `${t.name} (${t.orgname})`).join(', ') : lesson.ro.map(t => t.name).join(', ')}
         </Text>
-        {lesson.te.map((teacher, index) => (
-          <Text key={index} style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
-            {teacher.name || teacher.orgname}
-            {isSubstitution && teacher.name && (
-              <Text style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
-                {` (${teacher.orgname})`}
-              </Text>
-            )}
-          </Text>
-        ))}
-        {isSubstitution && <Text style={styles.substitutedText}>Änderung</Text>}
-        {isCancelled && <Text style={styles.substitutedText}>Entfällt</Text>}
-        {lesson.lstext != null && (
-          <Text style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
-            Lesson Text: {lesson.lstext}
+        <Text style={isDarkMode ? styles.lessonTextDark : styles.lessonTextLight}>
+          {lesson.te[0].orgid ? lesson.te.map(t => `${t.name} (${t.orgname})`).join(', ') : lesson.te.map(t => t.name).join(', ')}
+        </Text>
+        
+        {isCancelled ? (
+          <Text style={styles.substitutedText}>Entfällt</Text>
+        ) : isSubstitution ? (
+          <Text style={styles.substitutedText}>Änderung</Text>
+        ) : isIrregular ? (
+          <Text style={styles.substitutedText}>Unregelmäßig</Text>
+        ) : null}
+        {hasAdditionalInfo && (
+          <Text style={[styles.infoIndicator, isDarkMode ? styles.textDark : styles.textLight]}>
+            ℹ️
           </Text>
         )}
-      </View>
+      </TouchableOpacity>
     );
   });
 
@@ -572,75 +594,99 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
               })}
             </View>
             {timeGrid[0]?.timeUnits.map((timeUnit) => (
-  <View key={`${timeUnit.startTime}-${timeUnit.endTime}`} style={styles.row}>
-    <View style={[styles.timeCell, isDarkMode ? styles.cellDark : styles.cellLight]}>
-      <Text style={[styles.timeText, isDarkMode ? styles.textDark : styles.textLight]}>
-        {`${formatTime(timeUnit.startTime)} - ${formatTime(timeUnit.endTime)}`}
-      </Text>
-    </View>
-
-
-{daysArray.map(date => {
-  const lessonsForCell = groupedTimetable[date]?.filter(lesson => {
-    // Prüfe ob die Lektion in diesem Zeitslot liegt
-    return (
-      (lesson.startTime <= timeUnit.startTime && lesson.endTime > timeUnit.startTime) || // Lektion beginnt vorher und endet während/nach dem Slot
-      (lesson.startTime >= timeUnit.startTime && lesson.startTime < timeUnit.endTime) || // Lektion beginnt während des Slots
-      (lesson.startTime <= timeUnit.startTime && lesson.endTime >= timeUnit.endTime)     // Lektion geht über den ganzen Slot
-    );
-  }) || [];
-
-  return (
-    <View key={`${date}-${timeUnit.startTime}`} 
-          style={[styles.dateCell, isDarkMode ? styles.cellDark : styles.cellLight]}>
-      {lessonsForCell.length > 0 ? (
-        lessonsForCell.map(lesson => (
-          <LessonCell key={lesson.id} lesson={lesson} />
-        ))
-      ) : (
-        <View style={{ height: 20, opacity: 0 }} />
-      )}
-    </View>
-  );
-})}
-
-
-
-
-
-  </View>
+              <View key={`${timeUnit.startTime}-${timeUnit.endTime}`} style={styles.row}>
+                <View style={[styles.timeCell, isDarkMode ? styles.cellDark : styles.cellLight]}>
+                  <Text style={[styles.timeText, isDarkMode ? styles.textDark : styles.textLight]}>
+                    {`${formatTime(timeUnit.startTime)} - ${formatTime(timeUnit.endTime)}`}
+                  </Text>
+                </View>
+            {daysArray.map(date => {
+              const lessonsForCell = groupedTimetable[date]?.filter(lesson => {
+                return (
+                  (lesson.startTime <= timeUnit.startTime && lesson.endTime > timeUnit.startTime) || // Lektion beginnt vorher und endet während/nach dem Slot
+                  (lesson.startTime >= timeUnit.startTime && lesson.startTime < timeUnit.endTime) || // Lektion beginnt während des Slots
+                  (lesson.startTime <= timeUnit.startTime && lesson.endTime >= timeUnit.endTime)     // Lektion geht über den ganzen Slot
+                );
+              }) || [];
+              return (
+                <View key={`${date}-${timeUnit.startTime}`} 
+                      style={[styles.dateCell, isDarkMode ? styles.cellDark : styles.cellLight]}>
+                  {lessonsForCell.length > 0 ? (
+                    lessonsForCell.map(lesson => (
+                      <LessonCell key={lesson.id} lesson={lesson} />
+                    ))
+                  ) : (
+                    <View style={{ height: 20, opacity: 0 }} />
+                  )}
+                </View>
+              );
+            })}
+            </View>
           ))}
           </View>
         </ScrollView>
       </ScrollView>
+      {selectedLesson && (
+        <View style={styles.lessonDetailContainer}>
+          <Text style={styles.detailTitle}>Details zur Stunde</Text>
+          <Text>ID: {selectedLesson.id}</Text>
+          <Text>Fach: {selectedLesson.su.map((s) => s.longname).join(', ')}</Text>
+          <Text>Klasse: {selectedLesson.kl.map((k) => k.longname).join(', ')}</Text>
+          <Text>Lehrer:{' '} {selectedLesson.te[0].orgid ? selectedLesson.te.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.te.map(t => t.longname).join(', ')} </Text>
+          <Text>Raum:{' '} {selectedLesson.ro[0].orgid ? selectedLesson.ro.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.ro.map(t => t.longname).join(', ')}</Text>
+          <Text>Datum: {formatDate(selectedLesson.date)}</Text>
+          <Text>Startzeit: {formatTime(selectedLesson.startTime)}</Text>
+          <Text>Endzeit: {formatTime(selectedLesson.endTime)}</Text>
+          <Text>Stundentype: {selectedLesson.lstype || 'Lesson'}</Text>
+          <Text>Stundentext: {selectedLesson.lstext || '-'}</Text>
+          <Text>Vertretungstext: {selectedLesson.substText || '-'}</Text>
+          <Text>Code: {selectedLesson.code || '-'}</Text>
+          <Text>Info: {selectedLesson.info || '-'}</Text>
+          <Text>Stundennummer: {selectedLesson.lsnumber || '-'}</Text>
+          <Text>Statusflags: {selectedLesson.statflags || '-'}</Text>
+          <Text>Aktivitätstyp: {selectedLesson.activityType || '-'}</Text>
+          <Text>Studentengruppe: {selectedLesson.sg || '-'}</Text>
+          <Text>Buchungsbemerkungen: {selectedLesson.bkRemark || '-'}</Text>
+          <Text>Buchungstext: {selectedLesson.bkText || '-'}</Text>
+          <TouchableOpacity onPress={() => setSelectedLesson(null)} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Schließen</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  infoIndicator: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    fontSize: 10
+  }, 
   container: {
     flex: 1,
     padding: 10,
-    paddingTop: 60
+    paddingTop: 60,
   },
   darkBackground: {
-    backgroundColor: '#121212'
+    backgroundColor: '#121212',
   },
   lightBackground: {
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 10,
   },
   arrowButton: {
-    padding: 10
+    padding: 10,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   headerRow: {
     flexDirection: 'row',
@@ -658,14 +704,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRightWidth: 1,
     borderLeftWidth: 1,
-    borderColor: '#ccc', // Einheitliche Border-Color
+    borderColor: '#ccc',
   },
   dateCell: {
     width: 120,
     padding: 5,
     borderRightWidth: 1,
     borderLeftWidth: 1,
-    borderColor: '#ccc', // Einheitliche Border-Color
+    borderColor: '#ccc',
   },
   cellDark: {
     borderColor: '#444',
@@ -678,67 +724,99 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
   },
   headerText: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 12
+    fontSize: 12,
   },
   lesson: {
     padding: 2,
     marginBottom: 2,
     borderWidth: 2,
-    borderRadius: 5
+    borderRadius: 5,
   },
   substitutedLesson: {
     backgroundColor: '#FFA3A3',
-    borderColor: '#FF7979'
+    borderColor: '#FF7979',
   },
   cancelledLesson: {
     backgroundColor: '#B8B8B8',
-    borderColor: '#999999'
+    borderColor: '#999999',
   },
   normalLessonLight: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#EDEDED'
+    borderColor: '#EDEDED',
   },
   normalLessonDark: {
     backgroundColor: '#2a2a2a',
-    borderColor: '#444'
+    borderColor: '#444',
   },
   lessonTextLight: {
     fontSize: 10,
-    color: '#000000'
+    color: '#000000',
   },
   lessonTextDark: {
     fontSize: 10,
-    color: '#ffffff'
+    color: '#ffffff',
   },
   substitutedText: {
     color: '#cc0000',
     fontWeight: 'bold',
     fontSize: 10,
-    marginTop: 2
+    marginTop: 2,
   },
   errorText: {
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: 'center',
+    backgroundColor: '#ff0000',
+    marginTop: 80,
   },
   textDark: {
-    color: '#ffffff'
+    color: '#ffffff',
   },
   textLight: {
-    color: '#000000'
+    color: '#000000',
   },
   holidayCell: {
-    backgroundColor: '#FFD700', // Goldene Farbe für Ferien
-    borderColor: '#FFA500' // Orange als Umrandung
+    backgroundColor: '#FFD700',
+    borderColor: '#FFA500',
   },
   holidayText: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#FF4500', // Rot-Orange für den Text
-    textAlign: 'center'
-  }
+    color: '#FF4500',
+    textAlign: 'center',
+  },
+  lessonDetailContainer: {
+    position: 'absolute',
+    top: 100,
+    left: 20,
+    right: 20,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 15,
+    zIndex: 100,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+  },
+  detailTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  closeButton: {
+    marginTop: 15,
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
 });
 
 export default Stundenplan;

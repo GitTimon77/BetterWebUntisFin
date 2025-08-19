@@ -26,21 +26,21 @@ interface Lesson {
   date: number;
   startTime: number;
   endTime: number;
-  kl: Array<{ id: number; name: string; longname: string }>;
-  te: Array<{ id: number; name: string; longname: string; orgid?: number; orgname?: string }>;
-  su: Array<{ id: number; name: string; longname: string }>;
-  ro: Array<{ id: number; name: string; longname?: string }>;
-  code?: string;
   lstype?: string;
+  code?: string;
   info?: string;
   substText: string;
-  lstext: string;
+  lstext?: string;
   lsnumber: number;
-  startflags: string;
+  statflags: string;
   activityType: string;
   sg: string;
   bkRemark?: string;
   bkText?: string;
+  kl: Array<{ id: number; name: string; longname: string }>;
+  te: Array<{ id: number; name: string; longname: string; orgid?: number; orgname?: string }>;
+  su: Array<{ id: number; name: string; longname: string }>;
+  ro: Array<{ id: number; name: string; longname?: string }>;
 }
 
 interface Course {
