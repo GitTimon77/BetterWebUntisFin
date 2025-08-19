@@ -213,7 +213,7 @@ const Stundenplan: React.FC = () => {
         const axiosInstance = createAxiosInstance(`https://${loginserver}`);
         //await fetchTimetable({ school, username, password, axiosInstance });
 
-        const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username}`);
+        const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username.toLowerCase()}`);
         if (savedMarkedCourses) {
           setMarkedCourses(JSON.parse(savedMarkedCourses));
         }

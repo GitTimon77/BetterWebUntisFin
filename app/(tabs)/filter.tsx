@@ -150,7 +150,7 @@ const Filter: React.FC = () => {
         //await fetchTimetable({ school, username, password, axiosInstance });
         
         // Laden der markierten Kurse
-        const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username}`);
+        const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username.toLowerCase()}`);
         if (savedMarkedCourses) {  
           setMarkedCourses(JSON.parse(savedMarkedCourses));
         }
@@ -301,7 +301,7 @@ const Filter: React.FC = () => {
         : [...prevMarked, courseKey];
       
       // Speichern in AsyncStorage
-      AsyncStorage.setItem(`markedCourses${globalUsername}`, JSON.stringify(newMarked));      
+      AsyncStorage.setItem(`markedCourses${globalUsername.toLowerCase()}`, JSON.stringify(newMarked));      
       return newMarked;
     });
   };
