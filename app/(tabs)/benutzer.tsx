@@ -29,6 +29,7 @@ const Benutzer: React.FC = () => {
   const isDarkMode = colorScheme === "dark";
   const [user, setUser] = useState<string | null>(null);
   const [schoolYear, setSchoolYear] = useState<string | null>(null);    
+  const [lastImportTime, setLastImportTime] = useState<string | null>(null);
 
   const navigation = useNavigation();
 
@@ -45,6 +46,13 @@ const Benutzer: React.FC = () => {
             setSchoolYear(schoolYear);
         } 
     }
+    const loadLastImportTime = async () => {
+      const lastImportTime = await getData("lastUpdate");
+        if (lastImportTime) {
+            setLastImportTime(lastImportTime);
+        }
+    }
+    loadLastImportTime();
     loadSchoolYear();
     loadUser();
   }, []);
@@ -70,12 +78,17 @@ const Benutzer: React.FC = () => {
         {user ? (
           <Text style={styles.userText}>Eingeloggt als: {user}</Text>
         ) : (
-          <Text style={styles.userText}>Kein Benutzer gefunden</Text>
+          <Text style={styles.userText}>Benutzer nicht verfügbar</Text>
         )}
         {schoolYear ? (
           <Text style={styles.userText}>Aktuelles Schuljahr: {schoolYear}</Text>
         ) : (
-          <Text style={styles.userText}>Kein Schuljahr gefunden</Text>
+          <Text style={styles.userText}>Kein aktives Schuljahr</Text>
+        )}
+        {lastImportTime ? (
+          <Text style={styles.userText}>Letzter Import: {lastImportTime}</Text>
+        ) : (
+          <Text style={styles.userText}>Letzter Import nicht verfügbar</Text>
         )}
       </View>
 

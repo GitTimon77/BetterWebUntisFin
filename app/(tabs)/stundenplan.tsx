@@ -385,12 +385,26 @@ const Stundenplan: React.FC = () => {
         saveData('schoolYear', currentSchoolYear.data.result.name.toString());
         setSchoolYear(currentSchoolYear.data.result.name.toString());
 
-        await axiosInstance({
+        const lastUpdate = await axiosInstance({
           method: "POST",
           url: `/WebUntis/jsonrpc.do`,
           params: { school },
           data: {
             id: "5",
+            method: "getLatestImportTime",
+            params: {},
+            jsonrpc: "2.0"
+          }
+        });
+
+        saveData('lastUpdate', new Date(lastUpdate.data.result).toLocaleString());
+
+        await axiosInstance({
+          method: "POST",
+          url: `/WebUntis/jsonrpc.do`,
+          params: { school },
+          data: {
+            id: "6",
             method: "logout",
             params: {},
             jsonrpc: "2.0"
