@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native"; // Navigation Hook imp
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type RootTabParamList = {
   index: {};
@@ -69,37 +70,41 @@ const Benutzer: React.FC = () => {
     navigation.navigate("impressum" as never); 
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Benutzer</Text>
-      </View>
-      <View style={styles.content}>
-        {user ? (
-          <Text style={styles.userText}>Eingeloggt als: {user}</Text>
-        ) : (
-          <Text style={styles.userText}>Benutzer nicht verfügbar</Text>
-        )}
-        {schoolYear ? (
-          <Text style={styles.userText}>Aktuelles Schuljahr: {schoolYear}</Text>
-        ) : (
-          <Text style={styles.userText}>Kein aktives Schuljahr</Text>
-        )}
-        {lastImportTime ? (
-          <Text style={styles.userText}>Letzter Import: {lastImportTime}</Text>
-        ) : (
-          <Text style={styles.userText}>Letzter Import nicht verfügbar</Text>
-        )}
-      </View>
+    <View style={[{paddingTop: 0, paddingBottom: 0, flex: 1}, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
+        <View style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
+        <View style={styles.titleContainer}>
+            <Text style={styles.title}>Benutzer</Text>
+        </View>
+        <View style={styles.content}>
+            {user ? (
+            <Text style={styles.userText}>Eingeloggt als: {user}</Text>
+            ) : (
+            <Text style={styles.userText}>Benutzer nicht verfügbar</Text>
+            )}
+            {schoolYear ? (
+            <Text style={styles.userText}>Aktuelles Schuljahr: {schoolYear}</Text>
+            ) : (
+            <Text style={styles.userText}>Kein aktives Schuljahr</Text>
+            )}
+            {lastImportTime ? (
+            <Text style={styles.userText}>Letzter Import: {lastImportTime}</Text>
+            ) : (
+            <Text style={styles.userText}>Letzter Import nicht verfügbar</Text>
+            )}
+        </View>
 
-      <TouchableOpacity style={styles.impressumBtn} onPress={goToImpressum}>
-        <Text style={styles.impressumText}>Impressum</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.impressumBtn} onPress={goToImpressum}>
+            <Text style={styles.impressumText}>Impressum</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+        </View>
+    </View> 
   );
 };
 
@@ -113,7 +118,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingTop: 50,
   },
   titleContainer: {
     flexDirection: "row",
@@ -125,14 +129,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+    margin:20,
   },
   content: {
-    flex: 1, // Nimmt den Platz in der Mitte ein
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#2023e46a",
+    borderRadius: 10,
+    flex: 1, 
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 10,
+    marginBottom: 20,
   },
   userText: {
     fontSize: 18,
+    paddingBottom: 10,
   },
   impressumBtn: {
     backgroundColor: "#888", // grau
