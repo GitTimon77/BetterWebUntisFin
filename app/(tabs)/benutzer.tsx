@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native"; // Navigation Hook imp
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
+import { RFPercentage } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type RootTabParamList = {
@@ -63,6 +64,8 @@ const Benutzer: React.FC = () => {
     SecureStore.deleteItemAsync('Loginname');
     SecureStore.deleteItemAsync('username');
     SecureStore.deleteItemAsync('password');
+    SecureStore.deleteItemAsync('schoolYear');
+    SecureStore.deleteItemAsync('lastUpdate');
     navigation.navigate('index' as never); 
   };
 
@@ -80,17 +83,18 @@ const Benutzer: React.FC = () => {
         </View>
         <View style={styles.content}>
             {user ? (
-            <Text style={styles.userText}>Eingeloggt als: {user}</Text>
+            <Text style={styles.userText}>
+                <Text style={styles.userTextFirst}>Eingeloggt als: </Text>{user}</Text>
             ) : (
             <Text style={styles.userText}>Benutzer nicht verfügbar</Text>
             )}
             {schoolYear ? (
-            <Text style={styles.userText}>Aktuelles Schuljahr: {schoolYear}</Text>
+            <Text style={styles.userText}><Text style={styles.userTextFirst}>Aktuelles Schuljahr: </Text>{schoolYear}</Text>
             ) : (
             <Text style={styles.userText}>Kein aktives Schuljahr</Text>
             )}
             {lastImportTime ? (
-            <Text style={styles.userText}>Letzter Import: {lastImportTime}</Text>
+            <Text style={styles.userText}><Text style={styles.userTextFirst}>Letzter Import: </Text>{lastImportTime}</Text>
             ) : (
             <Text style={styles.userText}>Letzter Import nicht verfügbar</Text>
             )}
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: RFPercentage(3.5),
     fontWeight: "bold",
     textAlign: "center",
     margin:20,
@@ -141,8 +145,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   userText: {
-    fontSize: 18,
+    fontSize: RFPercentage(3),
     paddingBottom: 10,
+    marginBottom: 10,
+  },
+  userTextFirst: {
+    fontWeight: "bold",
   },
   impressumBtn: {
     backgroundColor: "#888", // grau
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
   },
   impressumText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: RFPercentage(2.5),
     fontWeight: "600",
   },
   logoutBtn: {
@@ -167,7 +175,7 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: RFPercentage(2.5),
     fontWeight: "bold",
   },
 });

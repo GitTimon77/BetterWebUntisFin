@@ -7,6 +7,7 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, Touchabl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 type RootTabParamList = {
   Stundenplan: {};
@@ -630,25 +631,25 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
         <View style={styles.lessonDetailContainer}>
           <Text style={styles.detailTitle}>Details zur Stunde</Text>
           <ScrollView style={styles.detailScrollView} contentContainerStyle={{ paddingBottom: 30 }}>
-          <Text>ID: {selectedLesson.id}</Text>
-          <Text>Fach: {selectedLesson.su.map((s) => s.longname).join(', ')}</Text>
-          <Text>Klasse: {selectedLesson.kl.map((k) => k.longname).join(', ')}</Text>
-          <Text>Lehrer:{' '} {selectedLesson.te[0].orgid ? selectedLesson.te.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.te.map(t => t.longname).join(', ')} </Text>
-          <Text>Raum:{' '} {selectedLesson.ro[0].orgid ? selectedLesson.ro.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.ro.map(t => t.longname).join(', ')}</Text>
-          <Text>Datum: {formatDate(selectedLesson.date)}</Text>
-          <Text>Startzeit: {formatTime(selectedLesson.startTime)} Uhr</Text>
-          <Text>Endzeit: {formatTime(selectedLesson.endTime)} Uhr</Text>
-          <Text>Stundentype: {selectedLesson.lstype || 'Lesson'}</Text>
-          <Text>Stundentext: {selectedLesson.lstext || '-'}</Text>
-          <Text>Vertretungstext: {selectedLesson.substText || '-'}</Text>
-          <Text>Code: {selectedLesson.code || '-'}</Text>
-          <Text>Info: {selectedLesson.info || '-'}</Text>
-          <Text>Stundennummer: {selectedLesson.lsnumber || '-'}</Text>
-          <Text>Statusflags: {selectedLesson.statflags || '-'}</Text>
-          <Text>Aktivitätstyp: {selectedLesson.activityType || '-'}</Text>
-          <Text>Studentengruppe: {selectedLesson.sg || '-'}</Text>
-          <Text>Buchungsbemerkungen: {selectedLesson.bkRemark || '-'}</Text>
-          <Text>Buchungstext: {selectedLesson.bkText || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>ID: </Text>{selectedLesson.id}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Fach: </Text>{selectedLesson.su.map((s) => s.longname).join(', ')}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Klasse: </Text>{selectedLesson.kl.map((k) => k.longname).join(', ')}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Lehrer: </Text>{selectedLesson.te[0].orgid ? selectedLesson.te.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.te.map(t => t.longname).join(', ')} </Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Raum: </Text>{selectedLesson.ro[0].orgid ? selectedLesson.ro.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.ro.map(t => t.longname).join(', ')}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Datum: </Text>{formatDate(selectedLesson.date)}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Startzeit: </Text>{formatTime(selectedLesson.startTime)} Uhr</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Endzeit: </Text>{formatTime(selectedLesson.endTime)} Uhr</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Stundentype: </Text>{selectedLesson.lstype || 'Lesson'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Stundentext: </Text>{selectedLesson.lstext || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Vertretungstext: </Text>{selectedLesson.substText || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Code: </Text>{selectedLesson.code || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Info: </Text>{selectedLesson.info || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Stundennummer: </Text>{selectedLesson.lsnumber || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Statusflags: </Text>{selectedLesson.statflags || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Aktivitätstyp: </Text>{selectedLesson.activityType || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Studentengruppe: </Text>{selectedLesson.sg || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Buchungsbemerkungen: </Text>{selectedLesson.bkRemark || '-'}</Text>
+          <Text><Text style={[{fontWeight: 'bold'}]}>Buchungstext: </Text>{selectedLesson.bkText || '-'}</Text>
           </ScrollView>
           <TouchableOpacity onPress={() => setSelectedLesson(null)} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Schließen</Text>
@@ -668,12 +669,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 2,
     right: 2,
-    fontSize: 10
+    fontSize: RFPercentage(1),
   }, 
   container: {
     flex: 1,
     padding: 10,
     paddingTop: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   darkBackground: {
     backgroundColor: '#121212',
@@ -686,12 +689,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    width: '100%',
   },
   arrowButton: {
     padding: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: RFPercentage(3.5),
     fontWeight: 'bold',
   },
   headerRow: {
@@ -705,7 +709,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   timeCell: {
-    width: 100,
+    width: 80,
     padding: 5,
     justifyContent: 'center',
     borderRightWidth: 1,
@@ -713,7 +717,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   dateCell: {
-    width: 120,
+    width: 200,
     padding: 5,
     borderRightWidth: 1,
     borderLeftWidth: 1,
@@ -733,7 +737,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   timeText: {
-    fontSize: 12,
+    fontSize: RFPercentage(1.5),
   },
   lesson: {
     padding: 2,
@@ -758,21 +762,21 @@ const styles = StyleSheet.create({
     borderColor: '#444',
   },
   lessonTextLight: {
-    fontSize: 10,
+    fontSize: RFPercentage(1.5),
     color: '#000000',
   },
   lessonTextDark: {
-    fontSize: 10,
+    fontSize: RFPercentage(1.5),
     color: '#ffffff',
   },
   substitutedText: {
     color: '#cc0000',
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: RFPercentage(1.5),
     marginTop: 2,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: RFPercentage(3),
     textAlign: 'center',
     backgroundColor: '#ff0000',
     marginTop: 80,
@@ -788,7 +792,7 @@ const styles = StyleSheet.create({
     borderColor: '#FFA500',
   },
   holidayText: {
-    fontSize: 10,
+    fontSize: RFPercentage(1),
     fontWeight: 'bold',
     color: '#FF4500',
     textAlign: 'center',
@@ -810,7 +814,7 @@ const styles = StyleSheet.create({
 },
   detailTitle: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: RFPercentage(2),
     marginBottom: 10,
   },
   closeButton: {

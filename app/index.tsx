@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
 async function saveData(key: string, value: string) {
   try {
     await SecureStore.setItemAsync(key, value);
-    console.log('Daten erfolgreich gespeichert');
   } catch (error) {
     console.error('Fehler beim Speichern der Daten', error);
   }

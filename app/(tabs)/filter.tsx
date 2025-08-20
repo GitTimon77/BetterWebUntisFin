@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 type RootTabParamList = {
   Stundenplan: {};
@@ -380,10 +381,10 @@ const styles = StyleSheet.create({
   },
   backText: {
     marginLeft: 5,
-    fontSize: 16,
+    fontSize: RFPercentage(2.5),
   },
   title: {
-    fontSize: 20,
+    fontSize: RFPercentage(3.5),
     fontWeight: 'bold'
   },
   scrollViewContent: {
@@ -400,11 +401,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   lessonText: {
-    fontSize: 15
+    fontSize: RFPercentage(2),
   },
   errorText: {
     color: 'red',
-    fontSize: 16,
+    fontSize: RFPercentage(3),
     textAlign: 'center'
   }
 });
