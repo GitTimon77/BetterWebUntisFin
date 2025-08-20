@@ -172,7 +172,6 @@ import { RFPercentage } from "react-native-responsive-fontsize";
       try {
         const result = await SecureStore.getItemAsync(key);
         if (result) {
-          console.log('Gespeicherter Wert:', result);
           return result;
         } else {
           console.log('Kein Wert für diesen Schlüssel gefunden');

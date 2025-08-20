@@ -123,7 +123,6 @@ const LoginScreen: React.FC = () => {
   async function saveData(key: string, value: string) {
     try {
       await SecureStore.setItemAsync(key, value);
-      console.log('Daten erfolgreich gespeichert');
     } catch (error) {
       console.error('Fehler beim Speichern der Daten', error);
     }
@@ -133,7 +132,6 @@ const LoginScreen: React.FC = () => {
     try {
       const result = await SecureStore.getItemAsync(key);
       if (result) {
-        console.log('Gespeicherter Wert:', result);
         return result;
       } else {
         console.log('Kein Wert für diesen Schlüssel gefunden');

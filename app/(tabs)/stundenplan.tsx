@@ -260,7 +260,6 @@ const Stundenplan: React.FC = () => {
   async function saveData(key: string, value: string) {
       try {
         await SecureStore.setItemAsync(key, value);
-        console.log('Daten erfolgreich gespeichert');
       } catch (error) {
         console.error('Fehler beim Speichern der Daten', error);
       }
@@ -460,10 +459,6 @@ const Stundenplan: React.FC = () => {
         const courseKey = `${lesson.su[0]?.id}-${lesson.te[0]?.orgid || lesson.te[0]?.id}`;
         return markedCourses.includes(courseKey);
       });
-      console.log('Gefilterte Lektionen angewendet.');
-    }
-    else{
-      console.log('Keine markierten Kurse gefunden, alle Lektionen werden angezeigt.');
     }
 
     const grouped = filtered.reduce((acc, lesson) => {
