@@ -160,7 +160,7 @@ const Stundenplan: React.FC = () => {
         te: [{ id: 1, name: 'Lehrer 1', longname: 'Lehrer 1 Lang'}],
         su: [{ id: 1, name: 'Mathematik', longname: 'Mathematik Lang' }],
         ro: [{ id: 1, name: 'Raum 101', longname: 'Raum 101 Lang', orgid: 1, orgname: 'Raum 101 Org' }],
-        substText: 'Ich bin eine Substitution, das wird jetzt ein realer Text, bisschen komisch so viel zu schreiben',
+        substText: 'Ich bin eine Substitution, das wird jetzt ein realer Text, bisschen komisch so viel zu schreiben. Ich gebe auf. Ich muss mehr schreiben, damit es nicht so kurz ist. Und noch mehr. Ich glaube, ich habe es geschafft.',
         lstext: 'Ich bin ein Lesson Text',
         lsnumber: 0,
         statflags: 'Ich bin ein Startflag',
@@ -629,14 +629,15 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
       {selectedLesson && (
         <View style={styles.lessonDetailContainer}>
           <Text style={styles.detailTitle}>Details zur Stunde</Text>
+          <ScrollView style={styles.detailScrollView} contentContainerStyle={{ paddingBottom: 30 }}>
           <Text>ID: {selectedLesson.id}</Text>
           <Text>Fach: {selectedLesson.su.map((s) => s.longname).join(', ')}</Text>
           <Text>Klasse: {selectedLesson.kl.map((k) => k.longname).join(', ')}</Text>
           <Text>Lehrer:{' '} {selectedLesson.te[0].orgid ? selectedLesson.te.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.te.map(t => t.longname).join(', ')} </Text>
           <Text>Raum:{' '} {selectedLesson.ro[0].orgid ? selectedLesson.ro.map(t => `${t.longname} (${t.orgname})`).join(', ') : selectedLesson.ro.map(t => t.longname).join(', ')}</Text>
           <Text>Datum: {formatDate(selectedLesson.date)}</Text>
-          <Text>Startzeit: {formatTime(selectedLesson.startTime)}</Text>
-          <Text>Endzeit: {formatTime(selectedLesson.endTime)}</Text>
+          <Text>Startzeit: {formatTime(selectedLesson.startTime)} Uhr</Text>
+          <Text>Endzeit: {formatTime(selectedLesson.endTime)} Uhr</Text>
           <Text>Stundentype: {selectedLesson.lstype || 'Lesson'}</Text>
           <Text>Stundentext: {selectedLesson.lstext || '-'}</Text>
           <Text>Vertretungstext: {selectedLesson.substText || '-'}</Text>
@@ -648,6 +649,7 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
           <Text>Studentengruppe: {selectedLesson.sg || '-'}</Text>
           <Text>Buchungsbemerkungen: {selectedLesson.bkRemark || '-'}</Text>
           <Text>Buchungstext: {selectedLesson.bkText || '-'}</Text>
+          </ScrollView>
           <TouchableOpacity onPress={() => setSelectedLesson(null)} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Schließen</Text>
           </TouchableOpacity>
@@ -658,6 +660,10 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
 };
 
 const styles = StyleSheet.create({
+  detailScrollView: {
+  flex: 1,
+  padding: 5, 
+},
   infoIndicator: {
     position: 'absolute',
     top: 2,
@@ -788,19 +794,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   lessonDetailContainer: {
-    position: 'absolute',
-    top: 100,
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 15,
-    zIndex: 100,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-  },
+  position: 'absolute',
+  top: 100,
+  left: 20,
+  right: 20,
+  bottom: 50, 
+  backgroundColor: '#fff',
+  borderWidth: 1,
+  borderRadius: 8,
+  padding: 15, 
+  zIndex: 100,
+  shadowColor: '#000',
+  shadowOpacity: 0.3,
+  shadowRadius: 10,
+},
   detailTitle: {
     fontWeight: 'bold',
     fontSize: 18,
