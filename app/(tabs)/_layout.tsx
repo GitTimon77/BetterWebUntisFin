@@ -8,9 +8,11 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -21,11 +23,19 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            paddingBottom: 0,
+            
           },
           default: {},
         }),
+        sceneStyle: Platform.select({
+          ios:{
+          paddingBottom: 0,
+          paddingTop: 0,
+          backgroundColor: Colors[colorScheme ?? 'light'].background,
+        },
+        default:{padding: 0},
+      }),
       }}>
       <Tabs.Screen
         name="stundenplan"
