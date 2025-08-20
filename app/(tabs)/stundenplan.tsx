@@ -227,6 +227,9 @@ const Stundenplan: React.FC = () => {
         if (savedMarkedCourses) {
           setMarkedCourses(JSON.parse(savedMarkedCourses));
         }
+        else {
+          setMarkedCourses([]);
+        }
       } catch (error) {
         setError('Fehler beim Laden der Daten.');
         console.error(error);
