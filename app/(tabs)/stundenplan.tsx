@@ -733,6 +733,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
+    fontSize: RFPercentage(1.5),
   },
   timeText: {
     fontSize: RFPercentage(1.5),
@@ -790,10 +791,10 @@ const styles = StyleSheet.create({
     borderColor: '#FFA500',
   },
   holidayText: {
-    fontSize: RFPercentage(1),
+    fontSize: RFPercentage(1.25),
     fontWeight: 'bold',
     color: '#FF4500',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   lessonDetailContainer: {
   position: 'absolute',

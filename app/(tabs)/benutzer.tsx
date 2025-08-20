@@ -84,7 +84,7 @@ const Benutzer: React.FC = () => {
         <View style={styles.content}>
             {user ? (
             <Text style={styles.userText}>
-                <Text style={styles.userTextFirst}>Eingeloggt als: </Text>{user}</Text>
+                <Text style={styles.userTextFirst}>Eingeloggt als: </Text>{user.toLocaleUpperCase()}</Text>
             ) : (
             <Text style={styles.userText}>Benutzer nicht verfügbar</Text>
             )}
