@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -89,8 +89,7 @@ const Benutzer: React.FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[{paddingTop: 0, paddingBottom: 0, flex: 1}, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
-        <View style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
+        <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
         <View style={styles.titleContainer}>
             <Text style={styles.title}>Benutzer</Text>
         </View>
@@ -120,8 +119,7 @@ const Benutzer: React.FC = () => {
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
             <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
-        </View>
-    </View> 
+        </SafeAreaView>
   );
 };
 
@@ -135,6 +133,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    paddingTop: 50,
   },
   titleContainer: {
     flexDirection: "row",
@@ -145,8 +144,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: RFPercentage(3.5),
     fontWeight: "bold",
-    textAlign: "center",
-    margin:20,
   },
   content: {
     backgroundColor: "#2023e46a",

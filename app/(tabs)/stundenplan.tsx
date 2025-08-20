@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    paddingTop: 60,
+    paddingTop: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -684,7 +684,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    margin: 20,
     width: '100%',
   },
   arrowButton: {
