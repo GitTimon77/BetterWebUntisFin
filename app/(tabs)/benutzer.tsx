@@ -1,14 +1,16 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { useNavigation } from "@react-navigation/native"; // Navigation Hook importieren
+import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 type RootTabParamList = {
   index: {};
   benutzer: {};
+  impressum: {};
 };
 
 type NavigationProp = BottomTabNavigationProp<RootTabParamList, 'benutzer'>;
@@ -33,7 +35,7 @@ const Benutzer: React.FC = () => {
   const [schoolYear, setSchoolYear] = useState<string | null>(null);    
   const [lastImportTime, setLastImportTime] = useState<string | null>(null);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -59,14 +61,25 @@ const Benutzer: React.FC = () => {
     loadUser();
   }, []);
 
-  const handleLogout = () => {
-    SecureStore.deleteItemAsync('Loginserver');
-    SecureStore.deleteItemAsync('Loginname');
-    SecureStore.deleteItemAsync('username');
-    SecureStore.deleteItemAsync('password');
-    SecureStore.deleteItemAsync('schoolYear');
-    SecureStore.deleteItemAsync('lastUpdate');
+  const performLogout = async () => {
+    await SecureStore.deleteItemAsync('Loginserver');
+    await SecureStore.deleteItemAsync('Loginname');
+    await SecureStore.deleteItemAsync('username');
+    await SecureStore.deleteItemAsync('password');
+    await SecureStore.deleteItemAsync('schoolYear');
+    await SecureStore.deleteItemAsync('lastUpdate');
     navigation.navigate('index' as never); 
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Abmelden bestätigen",
+      "Möchten Sie sich wirklich abmelden?",
+      [
+        { text: "Abbrechen", style: "cancel" },
+        { text: "Logout", style: "destructive", onPress: performLogout }
+      ]
+    );
   };
 
   const goToImpressum = () => {
@@ -153,7 +166,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   impressumBtn: {
-    backgroundColor: "#888", // grau
+    backgroundColor: "#888",
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 10,
