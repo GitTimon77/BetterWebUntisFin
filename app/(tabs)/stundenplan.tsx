@@ -155,7 +155,7 @@ const Stundenplan: React.FC = () => {
         date: 20250818,
         startTime: 1200,
         endTime: 1350,
-        kl: [{ id: 1, name: 'Klasse 1', longname: 'Klasse 1 Lang' }],
+        kl: [{ id: 1375, name: 'Klasse 1', longname: 'Klasse 1 Lang' }],
         te: [{ id: 1, name: 'Lehrer 1', longname: 'Lehrer 1 Lang'}],
         su: [{ id: 1, name: 'Mathematik', longname: 'Mathematik Lang' }],
         ro: [{ id: 1, name: 'Raum 101', longname: 'Raum 101 Lang', orgid: 1, orgname: 'Raum 101 Org' }],
@@ -172,7 +172,7 @@ const Stundenplan: React.FC = () => {
         date: 20250818,
         startTime: 1230,
         endTime: 1240,
-        kl: [{ id: 2, name: 'Klasse 2', longname: 'Klasse 2 Lang' }],
+        kl: [{ id: 1375, name: 'Klasse 2', longname: 'Klasse 2 Lang' }],
         te: [{ id: 2, name: 'Lehrer 2', longname: 'Lehrer 2 Lang' }],
         su: [{ id: 2, name: 'Englisch', longname: 'Englisch Lang' }],
         ro: [{ id: 2, name: 'Raum 102', longname: 'Raum 102 Lang' }],
@@ -182,7 +182,24 @@ const Stundenplan: React.FC = () => {
         statflags: 'Startflag 2',
         activityType: '',
         sg: '',
-        code: 'cancelled',
+        code: 'irregular',
+      },
+      {
+        id: 3,
+        date: 20250820,
+        startTime: 1300,
+        endTime: 1450,
+        kl: [{ id: 1375, name: 'Klasse 3', longname: 'Klasse 3 Lang' }],
+        te: [{ id: 3, name: 'Lehrer 3', longname: 'Lehrer 3 Lang' }],
+        su: [],
+        ro: [{ id: 3, name: 'Raum 103', longname: 'Raum 103 Lang' }],
+        substText: '',
+        //lstext: '',
+        lsnumber: 0,
+        statflags: 'Startflag 3',
+        activityType: '',
+        sg: '',
+        code: 'normal',
       }
     ]
   );
@@ -202,6 +219,8 @@ const Stundenplan: React.FC = () => {
       name: 'Herbstferien',
       longName: 'Lange Herbstferien'
     }]);
+
+    setUserId(1375); 
 
   }, [currentWeekStart]);
 
@@ -477,6 +496,7 @@ const Stundenplan: React.FC = () => {
     const isSubstitution = lesson.te[0]?.orgid != null || lesson.ro[0]?.orgid != null || !lesson.kl?.some(item => item.id === userId);
     const isCancelled = lesson.code === 'cancelled';
     const isIrregular = lesson.code === 'irregular';
+    const isEvent = lesson.su.length === 0;
     const isNormal = !isCancelled && !isSubstitution && !isIrregular;
     const hasAdditionalInfo = lesson.info || lesson.substText;
 
@@ -489,6 +509,10 @@ const Stundenplan: React.FC = () => {
             ? styles.cancelledLesson
             : isSubstitution
             ? styles.substitutedLesson
+            : isIrregular
+            ? styles.irregularLesson
+            : isEvent
+            ? styles.eventLesson
             : isNormal
             ? isDarkMode
               ? styles.normalLessonDark
@@ -512,6 +536,8 @@ const Stundenplan: React.FC = () => {
           <Text style={styles.substitutedText}>Änderung</Text>
         ) : isIrregular ? (
           <Text style={styles.substitutedText}>Unregelmäßig</Text>
+        ) : isEvent ? (
+          <Text style={styles.substitutedText}>Veranstaltung</Text>
         ) : null}
         {hasAdditionalInfo && (
           <Text style={[styles.infoIndicator, isDarkMode ? styles.textDark : styles.textLight]}>
@@ -749,6 +775,14 @@ const styles = StyleSheet.create({
   cancelledLesson: {
     backgroundColor: '#B8B8B8',
     borderColor: '#999999',
+  },
+  irregularLesson: {
+    backgroundColor: '#FFCC99',
+    borderColor: '#FFB366',
+  },
+  eventLesson: {
+    backgroundColor: '#D1E7FF',
+    borderColor: '#A6C8FF',
   },
   normalLessonLight: {
     backgroundColor: '#FFFFFF',
