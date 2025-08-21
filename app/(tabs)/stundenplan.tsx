@@ -822,8 +822,8 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   holidayCell: {
-    backgroundColor: '#FFD700',
-    borderColor: '#FFA500',
+    backgroundColor: '#ebc700ff',
+    //borderColor: '#FFA500',
   },
   holidayText: {
     fontSize: RFPercentage(1.25),

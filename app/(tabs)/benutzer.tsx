@@ -91,9 +91,9 @@ const Benutzer: React.FC = () => {
   return (
         <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
         <View style={styles.titleContainer}>
-            <Text style={styles.title}>Benutzer</Text>
+            <Text style={[styles.title, {color: isDarkMode ? "#fff" : "#000"}]}>Benutzer</Text>
         </View>
-        <View style={styles.content}>
+        <View style={[styles.content, { backgroundColor: isDarkMode ? "#3c3b77ff" : "#2023e46a" }]}>
             {user ? (
             <Text style={styles.userText}>
                 <Text style={styles.userTextFirst}>Eingeloggt als: </Text>{user.toLocaleUpperCase()}</Text>

@@ -152,7 +152,6 @@ import { RFPercentage } from "react-native-responsive-fontsize";
           const axiosInstance = createAxiosInstance(`https://${loginserver}`);
           //await fetchTimetable({ school, username, password, axiosInstance });
           
-          // Laden der markierten Kurse
           const savedMarkedCourses = await AsyncStorage.getItem(`markedCourses${username.toLowerCase()}`);
           if (savedMarkedCourses) {  
             setMarkedCourses(JSON.parse(savedMarkedCourses));
@@ -330,117 +329,111 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 
 
     if (loading) return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );  
-    if (error) return <Text style={styles.errorText}>{error}</Text>;
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: isDarkMode ? '#121212' : '#fff',
+    }}>
+      <ActivityIndicator size="large" color={isDarkMode ? '#0a84ff' : '#0000ff'} />
+    </View>
+  );
+  if (error) return (
+    <Text style={[styles.errorText, { color: isDarkMode ? '#ff7373' : 'red' }]}>{error}</Text>
+  );
 
-    return (
-  <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
-    <View style={styles.titleContainer}>
-      <Text style={styles.title}>Filter</Text>
-    </View>
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <View style={styles.lessonsContainer}>
-        {uniqueCourses.map((course, index) => (
-          <View key={index} style={styles.lessonRow}>
-            <CheckBox
-              checked={markedCourses.includes(`${course.subjectId}-${course.teacherId}`)}
-              onPress={() => toggleCourseSelection(course.subjectId, course.teacherId)}
-            />
-            <Text style={styles.lessonText}>
-              {`${course.subject}, Teacher: ${course.teacher}`}
-            </Text>
-          </View>
-        ))}
+  return (
+    <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
+      <View style={styles.titleContainer}>
+        <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#121212' }]}>Filter</Text>
       </View>
-    </ScrollView>
-    
-    <View style={styles.resetButtonContainer}>
-      <Button title="Filter zurücksetzen" onPress={resetFilter} color={'black'}/>
-    </View>
-  </SafeAreaView>
-);
-  };
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.lessonsContainer}>
+          {uniqueCourses.map((course, index) => (
+            <View key={index} style={styles.lessonRow}>
+              <CheckBox
+                checked={markedCourses.includes(`${course.subjectId}-${course.teacherId}`)}
+                onPress={() => toggleCourseSelection(course.subjectId, course.teacherId)}
+                containerStyle={{
+                  backgroundColor: 'transparent',
+                  borderWidth: 0,
+                  padding: 0,
+                  marginRight: 8
+                }}
+                checkedColor={isDarkMode ? '#0a84ff' : '#007AFF'}
+                uncheckedColor={isDarkMode ? '#bbb' : '#444'}
+              />
+              <Text style={[styles.lessonText, { color: isDarkMode ? '#e0e0e0' : '#232323' }]}>
+                {`${course.subject}, Teacher: ${course.teacher}`}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+
+      <View style={styles.resetButtonContainer}>
+        <Button 
+          title="Filter zurücksetzen" 
+          onPress={resetFilter} 
+          color={isDarkMode ? '#c90f0f' : 'black'} 
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
   const styles = StyleSheet.create({
-      darkBackground: {
-      backgroundColor: '#121212'
-    },
-    lightBackground: {
-      backgroundColor: '#ffffff'
-    },
-    container: {
-      flex: 1,
-      padding: 10,
-      paddingTop: 50,
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: 20,
-    },
-    placeholderContainer: {
-      flex: 1,
-    },
-    arrowContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-    },
-    arrowButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-    },
-    backText: {
-      marginLeft: 5,
-      fontSize: RFPercentage(2.5),
-    },
-    title: {
-      fontSize: RFPercentage(3.5),
-      fontWeight: 'bold'
-    },
-    scrollViewContent: {
-      flexGrow: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-    },
-    lessonsContainer: {
-      alignItems: 'flex-start',
-    },
-    lessonRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    lessonText: {
-      fontSize: RFPercentage(2),
-    },
-    errorText: {
-      color: 'red',
-      fontSize: RFPercentage(3),
-      textAlign: 'center'
-    },
-    resetButtonContainer: {
-      position: 'absolute',
-      bottom: 20,
-      left: 20,
-      right: 20,
-      backgroundColor: '#c90f0f42',
-      borderRadius: 10,
-    }
-  });
+  darkBackground: {
+    backgroundColor: '#121212'
+  },
+  lightBackground: {
+    backgroundColor: '#ffffff'
+  },
+  container: {
+    flex: 1,
+    padding: 10,
+    paddingTop: 50,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
+  },
+  title: {
+    fontSize: RFPercentage(3.5),
+    fontWeight: 'bold'
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  lessonsContainer: {
+    alignItems: 'flex-start',
+  },
+  lessonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  lessonText: {
+    fontSize: RFPercentage(2),
+  },
+  errorText: {
+    color: 'red',
+    fontSize: RFPercentage(3),
+    textAlign: 'center'
+  },
+  resetButtonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#c90f0f42',
+    borderRadius: 10,
+  }
+});
+
 
   export default Filter;

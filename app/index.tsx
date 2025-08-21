@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
 
 type RootTabParamList = {
   stundenplan: {};
@@ -15,6 +15,8 @@ type NavigationProp = BottomTabNavigationProp<RootTabParamList, 'index'>;
 type LoginScreenRouteProp = RouteProp<RootTabParamList, 'index'>;
 
 const SchoolQuery: React.FC<{ route: any }> = () => {
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
   const route = useRoute<LoginScreenRouteProp>();
   const navigation = useNavigation<NavigationProp>();
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -61,7 +63,7 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
   const isCentered = searchTerm.length <= 2;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -73,15 +75,25 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
         ]}>
           <View style={styles.innerContent}>
             <View style={styles.header}>
-              <Text style={styles.title}>Schule suchen</Text>
+              <Text style={[styles.title, { color: isDarkMode ? "#fff" : "#121212" }]}>Schule suchen</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: isDarkMode ? "#222" : "#fff",
+                    color: isDarkMode ? "#fff" : "#121212",
+                    borderColor: isDarkMode ? "#444" : "gray"
+                  }
+                ]}
                 value={searchTerm}
                 onChangeText={(text) => setSearchTerm(text)}
                 placeholder="Schule suchen..."
+                placeholderTextColor={isDarkMode ? "#888" : "#aaa"}
               />
             </View>
-            {error && !isCentered &&<Text style={styles.errorText}>{error}</Text>}
+            {error && !isCentered &&
+              <Text style={[styles.errorText, { color: isDarkMode ? "#ff7373" : "red" }]}>{error}</Text>
+            }
             <FlatList
               data={schools}
               keyExtractor={(item) => item.loginName.toString()}
@@ -92,10 +104,13 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
                     saveData("Loginserver", item.server);
                     navigation.navigate('login', {});
                   }}
-                  style={styles.schoolItem}
+                  style={[
+                    styles.schoolItem,
+                    { backgroundColor: isDarkMode ? "#181818" : "#f7f7f7" }
+                  ]}
                 >
-                  <Text>{item.displayName}</Text>
-                  <Text>{item.address}</Text>
+                  <Text style={{ color: isDarkMode ? "#e0e0e0" : "#232323" }}>{item.displayName}</Text>
+                  <Text style={{ color: isDarkMode ? "#e0e0e0" : "#232323" }}>{item.address}</Text>
                 </TouchableOpacity>
               )}
               style={styles.flatList}
@@ -107,9 +122,16 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
   );
 };
 
+
 const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  darkBackground: {
+    backgroundColor: "#121212",
+  },
+  lightBackground: {
+    backgroundColor: "#ffffff",
+  },
   header: {
     width: '100%',
   },

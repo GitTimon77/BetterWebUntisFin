@@ -15,8 +15,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useColorScheme
 } from 'react-native';
-//import DropdownMenuEarly from './DropdownMenuEarly';
 
 type RootTabParamList = {
   '(tabs)': {};
@@ -69,6 +69,9 @@ const LoginScreen: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
 
   const handleLogin = async () => {
     const school = await getData('Loginname');
@@ -166,32 +169,52 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView 
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
+      <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
-        <ScrollView 
-          contentContainerStyle={styles.scrollViewContent}
+        <ScrollView
+          contentContainerStyle={[styles.scrollViewContent, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.container}>
-            <Text style={styles.title}>Login für WebUntis</Text>
+            <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#121212' }]}>Login für WebUntis</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: isDarkMode ? '#222' : '#ffffff',
+                  borderColor: isDarkMode ? '#555' : '#cccccc',
+                  color: isDarkMode ? '#fff' : '#000'
+                }
+              ]}
               placeholder="Benutzername"
+              placeholderTextColor={isDarkMode ? '#888' : '#aaa'}
               value={username}
               onChangeText={setUsername}
+              autoCapitalize="none"
             />
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: isDarkMode ? '#222' : '#ffffff',
+                  borderColor: isDarkMode ? '#555' : '#cccccc',
+                  color: isDarkMode ? '#fff' : '#000'
+                }
+              ]}
               placeholder="Passwort"
+              placeholderTextColor={isDarkMode ? '#888' : '#aaa'}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
-            <TouchableOpacity 
-              style={styles.button} 
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: isDarkMode ? '#0a84ff' : '#007AFF' }
+              ]}
               onPress={handleLogin}
               disabled={isLoading}
             >
