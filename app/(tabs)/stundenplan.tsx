@@ -473,12 +473,15 @@ const Stundenplan: React.FC = () => {
     }
 
     let filtered = timetable;
-    if (markedCourses.length > 0) {
-      filtered = timetable.filter(lesson => {
-        const courseKey = `${lesson.su[0]?.id}-${lesson.te[0]?.orgid || lesson.te[0]?.id}`;
-        return markedCourses.includes(courseKey);
-      });
-    }
+      if (markedCourses.length > 0) {
+        filtered = timetable.filter(lesson => {
+          if (lesson.su.length === 0) {
+            return true; // Stunden ohne su-Elemente passieren den Filter
+          }
+          const courseKey = `${lesson.su[0]?.id}-${lesson.te[0]?.orgid || lesson.te[0]?.id}`;
+          return markedCourses.includes(courseKey);
+        });
+      }
 
     const grouped = filtered.reduce((acc, lesson) => {
       const dateKey = lesson.date;
