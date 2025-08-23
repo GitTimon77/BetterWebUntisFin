@@ -364,7 +364,7 @@ import { RFPercentage } from "react-native-responsive-fontsize";
                 uncheckedColor={isDarkMode ? '#bbb' : '#444'}
               />
               <Text style={[styles.lessonText, { color: isDarkMode ? '#e0e0e0' : '#232323' }]}>
-                {`${course.subject}, Teacher: ${course.teacher}`}
+                {`${course.subject}, Lehrer: ${course.teacher}`}
               </Text>
             </View>
           ))}

@@ -787,8 +787,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFB366',
   },
   eventLesson: {
-    backgroundColor: '#D1E7FF',
-    borderColor: '#A6C8FF',
+    backgroundColor: '#64afffff',
+    borderColor: '#438bffff',
   },
   normalLessonLight: {
     backgroundColor: '#FFFFFF',

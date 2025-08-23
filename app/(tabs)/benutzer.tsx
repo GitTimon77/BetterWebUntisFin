@@ -93,7 +93,7 @@ const Benutzer: React.FC = () => {
         <View style={styles.titleContainer}>
             <Text style={[styles.title, {color: isDarkMode ? "#fff" : "#000"}]}>Benutzer</Text>
         </View>
-        <View style={[styles.content, { backgroundColor: isDarkMode ? "#3c3b77ff" : "#2023e46a" }]}>
+        <View style={[styles.content, { backgroundColor: isDarkMode ? "#7978a0ff" : "#2023e46a" }]}>
             {user ? (
             <Text style={styles.userText}>
                 <Text style={styles.userTextFirst}>Eingeloggt als: </Text>{user.toLocaleUpperCase()}</Text>
@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   content: {
-    backgroundColor: "#2023e46a",
     borderRadius: 10,
     flex: 1, 
     justifyContent: "flex-start",
