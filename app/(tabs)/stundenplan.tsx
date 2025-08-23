@@ -110,7 +110,7 @@ const Stundenplan: React.FC = () => {
 
   const onLessonPress = (lesson: Lesson) => {
     if (selectedLesson?.id === lesson.id) {
-      setSelectedLesson(null); // Deselect, schließt Detailanzeige
+      setSelectedLesson(null);
     } else {
       setSelectedLesson(lesson);
     }
@@ -630,9 +630,9 @@ for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate(
             {daysArray.map(date => {
               const lessonsForCell = groupedTimetable[date]?.filter(lesson => {
                 return (
-                  (lesson.startTime <= timeUnit.startTime && lesson.endTime > timeUnit.startTime) || // Lektion beginnt vorher und endet während/nach dem Slot
-                  (lesson.startTime >= timeUnit.startTime && lesson.startTime < timeUnit.endTime) || // Lektion beginnt während des Slots
-                  (lesson.startTime <= timeUnit.startTime && lesson.endTime >= timeUnit.endTime)     // Lektion geht über den ganzen Slot
+                  (lesson.startTime <= timeUnit.startTime && lesson.endTime > timeUnit.startTime) || 
+                  (lesson.startTime >= timeUnit.startTime && lesson.startTime < timeUnit.endTime) || 
+                  (lesson.startTime <= timeUnit.startTime && lesson.endTime >= timeUnit.endTime)     
                 );
               }) || [];
               return (
@@ -826,7 +826,6 @@ const styles = StyleSheet.create({
   },
   holidayCell: {
     backgroundColor: '#ebc700ff',
-    //borderColor: '#FFA500',
   },
   holidayText: {
     fontSize: RFPercentage(1.25),

@@ -63,7 +63,6 @@ async function readAllFromSecureStoreWithRetry(maxAttempts = 3, delayMs = 150) {
       const available = await SecureStore.isAvailableAsync();
       if (!available) {
         if (__DEV__) console.warn('[SecureStore] not available on this device');
-        // Wenn nicht verfügbar, brechen wir früh ab → alles null
         return { loginServer: null, loginName: null, username: null, password: null } as const;
       }
 
@@ -75,7 +74,6 @@ async function readAllFromSecureStoreWithRetry(maxAttempts = 3, delayMs = 150) {
       ]);
 
       const result = { loginServer, loginName, username, password } as const;
-      if (__DEV__) console.log(`[SecureStore] attempt ${attempt} →`, result);
 
       const hasAny = Object.values(result).some(Boolean);
       if (hasAny || attempt === maxAttempts) return result;
@@ -105,7 +103,6 @@ export default function RootLayout() {
         const has = (k: keyof typeof EXACT_KEYS) => Boolean(all[k]);
         const matched = ROUTE_RULES.find(r => r.required.every(has));
         const target = matched?.path ?? '/';
-        if (__DEV__) console.log('[Routing] →', target);
 
         if (isActive && !hasNavigatedRef.current) {
           hasNavigatedRef.current = true;
@@ -133,7 +130,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack
       screenOptions={{
-        headerTintColor: tint,             // macht iOS nicht mehr blau
+        headerTintColor: tint,
         headerStyle: { backgroundColor: bg },
       }}
     >

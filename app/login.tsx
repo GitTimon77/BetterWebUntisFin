@@ -104,11 +104,8 @@ const LoginScreen: React.FC = () => {
       const loginData = loginResponse.data;
       
       if (loginData.result && loginData.result.sessionId) {
-        
-        // Logout durchführen
         await handleLogout();
         
-        // Navigation zur Tabelle
         saveData("username", username);
         saveData("password", password);
         navigation.navigate("(tabs)", {});
@@ -149,7 +146,6 @@ const LoginScreen: React.FC = () => {
       const school = await getData('Loginname');
       const server = await getData('Loginserver');
       const axiosInstance = createAxiosInstance(`https://${server}`);
-      // Add a small delay before logout
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const data = await axiosInstance({

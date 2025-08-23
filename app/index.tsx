@@ -59,7 +59,6 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
     }
   };
 
-  // Entscheide, ob mittig oder oben NUR anhand der Query
   const isCentered = searchTerm.length <= 2;
 
   return (

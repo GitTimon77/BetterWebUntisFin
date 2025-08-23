@@ -320,8 +320,7 @@ import { RFPercentage } from "react-native-responsive-fontsize";
         const newMarked = prevMarked.includes(courseKey)
           ? prevMarked.filter(key => key !== courseKey)
           : [...prevMarked, courseKey];
-        
-        // Speichern in AsyncStorage
+
         AsyncStorage.setItem(`markedCourses${globalUsername.toLowerCase()}`, JSON.stringify(newMarked));      
         return newMarked;
       });
