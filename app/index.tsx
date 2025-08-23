@@ -106,7 +106,7 @@ const SchoolQuery: React.FC<{ route: any }> = () => {
                   }}
                   style={[
                     styles.schoolItem,
-                    { backgroundColor: isDarkMode ? "#181818" : "#f7f7f7" }
+                    { backgroundColor: isDarkMode ? "#121212" : "#ffffff" }
                   ]}
                 >
                   <Text style={{ color: isDarkMode ? "#e0e0e0" : "#232323" }}>{item.displayName}</Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
   content: {
     flex: 1,
@@ -149,11 +149,11 @@ const styles = StyleSheet.create({
   },
   topContent: {
     justifyContent: 'flex-start',
-    paddingTop: height * 0.08, // Abstand zum oberen Rand, damit nichts rausfällt
+    paddingTop: 20,
   },
   innerContent: {
     width: '100%',
-    maxHeight: height * 0.8,
+    maxHeight: height - 220,
   },
   title: {
     fontSize: 24,

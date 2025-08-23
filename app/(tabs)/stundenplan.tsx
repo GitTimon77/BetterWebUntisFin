@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import axios, { AxiosInstance } from 'axios';
@@ -190,7 +191,7 @@ const Stundenplan: React.FC = () => {
         startTime: 1300,
         endTime: 1450,
         kl: [{ id: 1375, name: 'Klasse 3', longname: 'Klasse 3 Lang' }],
-        te: [{ id: 3, name: 'Lehrer 3', longname: 'Lehrer 3 Lang' }],
+        te: [{ id: 3, name: 'Hans', longname: 'Hans Lang' }],
         su: [],
         ro: [{ id: 3, name: 'Raum 103', longname: 'Raum 103 Lang' }],
         substText: '',
@@ -476,7 +477,7 @@ const Stundenplan: React.FC = () => {
       if (markedCourses.length > 0) {
         filtered = timetable.filter(lesson => {
           if (lesson.su.length === 0) {
-            return true; // Stunden ohne su-Elemente passieren den Filter
+            return true; 
           }
           const courseKey = `${lesson.su[0]?.id}-${lesson.te[0]?.orgid || lesson.te[0]?.id}`;
           return markedCourses.includes(courseKey);
@@ -544,7 +545,7 @@ const Stundenplan: React.FC = () => {
         ) : null}
         {hasAdditionalInfo && (
           <Text style={[styles.infoIndicator, isDarkMode ? styles.textDark : styles.textLight]}>
-            ℹ️
+            <Entypo name="info-with-circle" size={RFPercentage(2)} color="black" />
           </Text>
         )}
       </TouchableOpacity>
@@ -761,9 +762,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 'bold',
     fontSize: RFPercentage(1.5),
+    textAlign: 'center',
   },
   timeText: {
     fontSize: RFPercentage(1.5),
+    fontWeight: 'bold',
   },
   lesson: {
     padding: 2,
@@ -829,7 +832,7 @@ const styles = StyleSheet.create({
     fontSize: RFPercentage(1.25),
     fontWeight: 'bold',
     color: '#FF4500',
-    textAlign: 'left',
+    textAlign: 'center',
   },
   lessonDetailContainer: {
   position: 'absolute',

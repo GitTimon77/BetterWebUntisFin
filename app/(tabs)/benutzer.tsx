@@ -89,7 +89,7 @@ const Benutzer: React.FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
-        <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
+      <SafeAreaView style={[styles.container, isDarkMode ? styles.darkBackground : styles.lightBackground]}>
         <View style={styles.titleContainer}>
             <Text style={[styles.title, {color: isDarkMode ? "#fff" : "#000"}]}>Benutzer</Text>
         </View>
@@ -119,7 +119,7 @@ const Benutzer: React.FC = () => {
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
             <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
-        </SafeAreaView>
+      </SafeAreaView>
   );
 };
 
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     paddingTop: 50,
+    margin:10,
   },
   titleContainer: {
     flexDirection: "row",
